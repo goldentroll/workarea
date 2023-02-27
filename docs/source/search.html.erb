@@ -1,0 +1,56 @@
+---
+title: Search
+body_class: body--flat
+---
+
+<div class='section [ white-text align-center ]'>
+  <div class='hide-if-noscript'>
+    <h1 class='heading heading--4 no-bottom-margin'>Search</h1>
+    <p class='no-top-margin'>Keep typing and we'll keep searching!</p>
+
+    <% form_tag '/search.html', class: 'search', method: 'get' do %>
+      <input type='search' name='q' placeholder='Search the Workarea Commerce Docs' class='search__input' autocomplete='off' id='lunr-search'>
+      <input type='submit' class='search__button' value='⟶'>
+    <% end %>
+  </div>
+
+  <noscript>
+    <span class='heading heading--4'>Dear Hardcore Conspiracy Theorist</span>
+    <p>We use JavaScript to power our search results.</p>
+    <p>Though we ourselves are not out to get you, personally, you'll have to re-enable JavaScript in order to search this site.</p>
+    <p>On behalf of Workarea, I apologize.</p>
+    <p>
+      Sincerely yours,<br>
+      <strong>Workarea Documentation, Esq.</strong>
+    </p>
+  </noscript>
+</div>
+
+<div class='hide-if-noscript'>
+  <div class='search-results'>
+    <p class='search-results__count'>No results to show</p>
+    <p class='search-results__plugins'>Looks like you might be searching for a plugin.</p>
+    <p class='search-results__help'>
+      <strong>Can't find what you're looking for?</strong>
+      <br>
+      Please
+      <strong>
+      <%=
+        link_to(
+          'open a GitHub issue',
+          "https://github.com/workarea-commerce/workarea/issues/new" +
+            "?template=documentation-request.md" +
+            "&labels=documentation" +
+            "&title=No Search Results" +
+            "&body=Searching your docs, there were no results for...",
+          target: '_blank'
+        )
+      %>
+      </strong>
+      to let us know.
+      <br>
+      We appreciate your feedback!
+    </p>
+    <ul class='search-results__list'></ul>
+  </div>
+</div>

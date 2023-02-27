@@ -1,0 +1,76 @@
+/*------------------------------------*\
+    #BASE
+\*------------------------------------*/
+
+body {
+    margin: 0;
+    padding: 0 !important;
+}
+
+body > center {
+    width: 100%;
+}
+
+body > center,
+body > center > table {
+    text-align: left;
+}
+
+// Required to ensure background is properly displayed across clients
+body,
+body > center,
+.mso-wrapper {
+    background: $email-background-color;
+}
+
+table {
+    border: 0;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+}
+
+td, th {
+    vertical-align: top;
+}
+
+img {
+    height: auto;
+    font-family: sans-serif;
+    font-size: $font-size;
+    line-height: $line-height;
+    color: invert($background-color);
+}
+
+a {
+    color: $blue;
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    font-family: $font-family;
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 26px;
+}
+
+p {
+    font-size: $font-size;
+    line-height: $line-height;
+}
+
+hr {
+    background-color: $light-gray;
+    border: 0;
+    height: 1px;
+    margin: ($spacing-unit * 2) 0;
+}
+
+ul {
+    padding-left: $spacing-unit * 3;
+}
+
+li {
+    margin: $spacing-unit 0;
+}

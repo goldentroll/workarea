@@ -1,0 +1,11 @@
+.product-insights-content-block
+  - if local_assigns[:title].present?
+    .product-insights-content-block__heading= title
+
+  - if view_model.products.present?
+    .grid
+      - view_model.products.each do |product|
+        = render_schema_org(product_schema(product))
+        .grid__cell.grid__cell--50.grid__cell--33-at-medium.grid__cell--16-at-wide
+          .product-summary.product-summary--small
+            = render 'workarea/storefront/products/summary', product: product

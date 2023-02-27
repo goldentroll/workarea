@@ -1,0 +1,64 @@
+- @page_title = t('workarea.admin.segments.index.page_title')
+
+.view
+  .view__header
+    .grid.grid--middle.grid--center
+      .grid__cell.grid__cell--50
+        .view__heading
+          = link_to "↑ #{t('workarea.admin.segments.index.dashboard_link')}", people_dashboards_path, class: 'view__dashboard-button'
+          %h1.heading--no-margin= t('workarea.admin.segments.index.page_title')
+          %p= t('workarea.admin.segments.index.description')
+
+  .view__container
+    .browsing-controls.browsing-controls--with-divider.browsing-controls--center
+      %p.browsing-controls__count
+        = t('workarea.admin.segments.index.segment', count: @segments.count)
+
+    - if @segments.any?
+      %table.index-table
+        %thead
+          %tr
+            %th.index-table__control-cell
+              .checkbox
+                = check_box_tag 'select_all', nil, false, id: 'select_all', class: 'checkbox__input', data: { bulk_action_select_all: '' }
+                = label_tag 'select_all', t('workarea.admin.bulk_actions.select_all'), class: 'checkbox__label'
+            %th= t('workarea.admin.fields.name')
+            %th= t('workarea.admin.fields.type')
+            %th.align-center= t('workarea.admin.fields.orders')
+            %th.align-center= t('workarea.admin.fields.aov')
+            %th.align-center= t('workarea.admin.fields.rules')
+            %th.align-center= t('workarea.admin.fields.insights')
+            %th= t('workarea.admin.fields.updated_at')
+        %tbody
+          - @segments.each do |segment|
+            %tr.index-table__row
+              %td.index-table__control-cell
+                .checkbox
+                  = check_box_tag 'global_id', segment.to_gid_param, false, class: 'checkbox__input', id: dom_id(segment), data: { bulk_action_item: '' }
+                  = label_tag dom_id(segment), '', class: 'checkbox__label', title: t('workarea.admin.bulk_actions.add_summary_button')
+              %td
+                = link_to segment.name, segment_path(segment)
+                = comments_icon_for(segment)
+              %td= segment.life_cycle? ? t('workarea.admin.segments.index.life_cycle') : t('workarea.admin.segments.index.custom')
+              %td.align-center= number_with_delimiter segment.insights.orders
+              %td.align-center= number_to_currency segment.insights.average_order_value
+              %td.align-center= segment.rules.size
+              %td.align-center
+                = link_to insights_segment_path(segment), class: 'link link--no-underline' do
+                  %span.spark{ title: t('workarea.admin.segments.index.sparkline_title') }
+                    {#{sparkline_analytics_data_for(segment.insights.orders_sparkline).join(',')}}
+              %td= local_time_ago(segment.updated_at)
+
+  .workflow-bar
+    .grid
+      .grid__cell.grid__cell--50
+        = render 'workarea/admin/shared/bulk_actions', klass: Workarea::Segment, search: @search
+
+      .grid__cell.grid__cell--50.align-right
+        - if segments.size >= 15
+          = link_to t('workarea.admin.segments.index.add_custom'), '#max-segments-info', disabled: 'disabled', data: { tooltip: '' }, class: 'workflow-bar__button workflow-bar__button--create workflow-bar__button--disabled'
+          #max-segments-info.tooltip-content
+            %p= t('workarea.admin.segments.index.max_segments')
+
+        - else
+          = link_to t('workarea.admin.segments.index.add_custom'), create_segments_path, id: 'add_segment', class: 'workflow-bar__button workflow-bar__button--create'

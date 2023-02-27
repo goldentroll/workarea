@@ -1,0 +1,71 @@
+/*------------------------------------*\
+    #ACTIVITY
+\*------------------------------------*/
+
+$activity-color:         $off-black !default;
+$activity-message-color: $dark-gray !default;
+$activity-time-color:    $dark-gray !default;
+$activity-bg-color:      $white !default;
+$activity-border-color:  $border-color !default;
+$activity-box-shadow: 0 2px 8px rgba($off-black, 0.5) !default;
+$activity-border-radius: $global-border-radius !default;
+$activity-message-border: 1px solid $off-white !default;
+$activity-in-card-border: 1px solid $light-gray !default;
+
+$activity-avatar-size:  32px !default;
+
+
+.activity {
+    @extend %clearfix;
+    position: relative;
+    padding: ($spacing-unit * 2) $spacing-unit ($spacing-unit * 2) ($activity-avatar-size / 2);
+    color: $activity-color;
+    background: $activity-bg-color;
+    box-shadow: $activity-box-shadow;
+    margin-bottom: $spacing-unit * 2;
+    margin-left: $activity-avatar-size / 2;
+    border-radius: $activity-border-radius;
+
+    .card & {
+        box-shadow: none;
+        border: $activity-in-card-border;
+    }
+}
+
+    .activity__header {
+        @extend %clearfix;
+    }
+
+        .activity__avatar {
+            position: absolute;
+            transform: translateX(-100%);
+            width: $activity-avatar-size;
+            height: $activity-avatar-size;
+        }
+
+        .activity__name {
+            @extend %heading;
+            @extend %heading--3;
+            @extend %heading--no-margin;
+            padding-left: $spacing-unit;
+        }
+
+        .activity__time {
+            color: $activity-time-color;
+            padding-left: $spacing-unit;
+            margin-bottom: 0;
+        }
+
+        .activity__actions {
+            position: absolute;
+            top: $spacing-unit;
+            right: $spacing-unit;
+        }
+
+        .activity__message {
+            color: $activity-message-color;
+            padding: $spacing-unit $spacing-unit 0;
+            margin-top: $spacing-unit;
+            border-top: $activity-message-border;
+        }
+

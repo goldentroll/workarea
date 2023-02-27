@@ -1,0 +1,17 @@
+User-Agent: *
+Allow: <%= sitemap_path %>
+Sitemap: https://<%= Workarea.config.host %>/sitemap.xml.gz
+<% if !Rails.env.production? %>
+Disallow: /
+<% else %>
+Disallow: /cart
+Disallow: /checkout
+Disallow: /orders
+Disallow: /search
+Disallow: /login
+Disallow: /logout
+Disallow: /forgot_password
+Disallow: /users
+Disallow: /products/*/details
+<% end %>
+<%= append_partials('storefront.robots_txt') %>

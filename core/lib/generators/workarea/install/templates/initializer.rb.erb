@@ -1,0 +1,10 @@
+Workarea.configure do |config|
+  # Basic site info
+  config.site_name = '<%= app_name.titleize %>'
+
+  config.host = {
+    'test' => 'www.example.com',
+    'development' => 'localhost',
+    'production' => 'www.<%= app_name.dasherize %>.com' # TODO
+  }[Rails.env]
+end

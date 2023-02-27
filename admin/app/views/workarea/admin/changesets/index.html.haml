@@ -1,0 +1,73 @@
+- @page_title = "#{t('workarea.admin.changesets.planned_changes_for')} #{@release.name}"
+
+.comments.view
+  .view__header
+    .grid.grid--middle.grid--right
+      .grid__cell.grid__cell--50
+        .view__heading
+          = link_to "↑ #{t('workarea.admin.changesets.all_releases')}", releases_path
+          %h1= link_to @release.name, url_for(@release)
+      .grid__cell.grid__cell--25
+        = render_aux_navigation_for(@release)
+
+  .view__container
+    = render_cards_for(@release, :planned_changes)
+
+    - if @release.changeset_count.zero?
+      .section.align-center
+        %p.heading.heading--3= t('workarea.admin.changesets.no_changesets')
+        %p.heading.heading--3= link_to t('workarea.admin.changesets.plan_some_changes'), release_releasables_path(@release)
+
+    .browsing-controls.browsing-controls--with-divider
+      %p.browsing-controls__count{ data: { browsing_controls_count: @release.changeset_count } }
+        = t('workarea.admin.changesets.pluralize_change', count: @release.changeset_count)
+
+
+    .grid.grid--center
+      - if @release.show_changeset_summary?
+        .grid__cell.grid__cell--80-at-medium
+          .section
+            .grid.grid--center.grid--auto
+              - @release.changeset_summary.each do |summary|
+                .grid__cell
+                  - if summary.searchable?
+                    .card.card--button
+                      = link_to search_path(type: [summary.type_filter], upcoming_changes: [@release.id]), class: 'card__header' do
+                        .card__header-text #{summary.count} #{summary.label}
+                        = releaseable_icon summary, { class: 'card__icon'}
+                  - else
+                    .card
+                      .card__header
+                        .card__header-text #{summary.count} #{summary.label}
+                        = releaseable_icon summary, { class: 'card__icon'}
+
+        .grid__cell.grid__cell--80-at-medium
+          %h2.align-center= t('workarea.admin.changesets.recent')
+
+      .grid__cell.grid__cell--80-at-medium
+        %ul.list-reset
+          - @release.changesets_with_releasable.each do |changeset|
+            %li
+              .release-changeset
+                .release-changeset__header
+                  .release-changeset__icon
+                    = changeset_icon changeset, { class: 'svg-icon svg-icon--large'}
+                  %h5.release-changeset__heading= link_to changeset.name, url_for(changeset.root)
+                  .release-changeset__actions
+                    .grid.grid--auto
+                      %p.grid__cell
+                        = link_to polymorphic_path(changeset.root, release_id: changeset.release), class: 'text-button' do
+                          = t('workarea.admin.actions.edit')
+                          = inline_svg_tag('workarea/admin/icons/edit.svg', class: 'text-button__icon')
+                      = form_tag release_changeset_path(@release, changeset), method: :delete, class: 'grid__cell', data: { deletion_form: { message: t('workarea.admin.changesets.delete_confirmation') } } do
+                        = button_tag value: 'delete_changeset', class: 'text-button text-button--destroy' do
+                          = t('workarea.admin.actions.delete')
+                          = inline_svg_tag('workarea/admin/icons/delete.svg', class: 'text-button__icon')
+
+                .release-changeset__body
+                  - changeset.changed_fields.each do |field|
+                    = render_changeset_field(changeset, field)
+
+          - if @release.show_changeset_summary?
+            %li.text.text--large.align-center
+              = link_to t('workarea.admin.cards.more', amount: @release.additional_changesets_count ), search_path(upcoming_changes: [@release.id])

@@ -1,0 +1,287 @@
+/*------------------------------------*\
+    #CALENDAR
+\*------------------------------------*/
+
+$calendar-bg-color: $white !default;
+$calendar-control-icon-color: $blue !default;
+$calendar-control-icon-hover-color: $white !default;
+$calendar-control-bg-color: $white !default;
+$calendar-control-hover-bg-color: $blue !default;
+$calendar-control-border-color: $blue !default;
+$calendar-header-color: $gray !default;
+$calendar-weekday-bg-color: $transparent !default;
+$calendar-day-bg-color: $off-white !default;
+$calendar-day-odd-bg-color: $white !default;
+$calendar-day-odd-border-color: $light-gray !default;
+$calendar-day-number-color: $off-black !default;
+$calendar-day-number-odd-color: $gray !default;
+$calendar-day-number-today-color: $white !default;
+$calendar-day-number-today-bg-color: $red !default;
+$calendar-release-color: $white !default;
+$calendar-release-bg-color: $blue !default;
+$calendar-new-release-color: $green !default;
+
+$calendar-day-header-border-color: $white !default;
+$calendar-day-header-odd-month-border-color: $light-gray !default;
+
+$calendar-min-width: 744px !default;
+$calendar-control-size: 32px !default;
+$calendar-day-width: 112px !default;
+$calendar-day-height: 104px !default;
+$calendar-day-gutter: 8px !default;
+$calendar-day-padding: 4px !default;
+$calendar-day-number-dimensions: 24px !default;
+$calendar-new-release-icon-size: 16px !default;
+
+$calendar-max-width: ($calendar-day-width + $calendar-day-gutter * 2) * 10 !default;
+$calendar-weekday-padding: 0 0 (24px - $calendar-day-gutter);
+
+
+/**
+ * 1. provides positioning context for `.calendar__today-button`
+ * 2. required to ensure container does not encompass `.calendar__control`
+ *    buttons. Don't ask me why.
+ * 3. negate base table styling
+ */
+.calendar {
+    @include global-box-shadow;
+    position: relative; /* [1] */
+    margin: 0 auto;
+    padding: 0 ($spacing-unit * 4);
+    max-width: $calendar-max-width;
+    min-width: $calendar-min-width;
+    background: $calendar-bg-color;
+    border: 1px solid $transparent; /* [2] */
+    border-radius: $global-border-radius;
+
+    tbody tr:hover {
+        background: none;
+    }
+}
+
+
+    /**
+     * Calendar Buttons
+     *
+     * 1. provides positioning context for `.calendar__control-icon`
+     */
+    .calendar__control {
+        display: block;
+        position: relative; /* [1] */
+        margin: 0 auto;
+        width:  $calendar-control-size;
+        height: $calendar-control-size;
+        background: $calendar-control-bg-color;
+        border: 1px solid $calendar-control-border-color;
+        border-radius: $calendar-control-size / 2;
+
+        &:hover {
+            background: $calendar-control-hover-bg-color;
+        }
+    }
+
+        .calendar__control-icon {
+            @include center;
+            width: $calendar-control-size - $spacing-unit;
+            height: $calendar-control-size - $spacing-unit;
+            fill: $calendar-control-icon-color;
+
+            .calendar__control:hover & {
+                fill: $calendar-control-icon-hover-color;
+            }
+        }
+
+    .calendar__control--prev {
+        margin-top: ($calendar-control-size / 2) * -1;
+        margin-bottom: ($calendar-control-size / 2);
+    }
+
+    .calendar__control--next {
+        margin-top: ($calendar-control-size / 2);
+        margin-bottom: ($calendar-control-size / 2) * -1;
+    }
+
+
+    .calendar__today-button {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: $calendar-day-gutter;
+        transform: translateY(-50%);
+    }
+
+    .calendar__today-button--active {
+        display: block;
+    }
+
+
+    /**
+     * Calendar
+     */
+    .calendar__table {
+        margin: 0;
+        width: 100%;
+        border-spacing: $calendar-day-gutter;
+        border-collapse: separate;
+        table-layout: fixed;
+    }
+
+        .calendar__weekday {
+            padding: $calendar-weekday-padding;
+            text-align: center;
+            background: $calendar-weekday-bg-color;
+            border: 0;
+        }
+
+            .calendar__weekday-name {
+                display: block;
+                font-size:   $font-size + 8px;
+                line-height: 1;
+            }
+
+
+        /**
+         * Calendar Header Rows
+         */
+        .calendar__header {
+            padding: 0;
+            color: $calendar-header-color;
+            font-size: $font-size - 4px;
+            font-weight: 500;
+            line-height: 1;
+            text-transform: uppercase;
+            border: 0;
+        }
+
+
+        /**
+         * Calendar Days
+         *
+         * 1. class added via ReleaseCalendarViewModel
+         */
+        .calendar__day { /* [1] */
+            padding: $calendar-day-padding;
+            height: $calendar-day-height;
+            background: $calendar-day-bg-color;
+            border: 1px solid $transparent;
+            vertical-align: top;
+
+            .tooltip-content & {
+                width: 200px;
+                height: auto;
+                padding-bottom: $calendar-day-padding;
+            }
+        }
+
+        .calendar__day--odd-month { /* [2] */
+            background: $calendar-day-odd-bg-color;
+            border-color: $calendar-day-odd-border-color;
+        }
+
+        .calendar__day--today {} /* [2] */
+        .calendar__day--start-of-week {} /* [2] */
+        .calendar__day--end-of-week {} /* [2] */
+
+            .calendar__day-header {
+                display: table;
+                width: 100%;
+                border-spacing: 0;
+                margin-bottom: $spacing-unit / 2;
+                padding-bottom: $spacing-unit / 2;
+                border-bottom: 1px solid $calendar-day-header-border-color;
+
+                .calendar__day--odd-month & {
+                    border-color: $calendar-day-header-odd-month-border-color;
+                }
+            }
+
+
+                .calendar__day-header-cell {
+                    display: table-cell;
+                    vertical-align: middle;
+
+                    & + & { text-align: right }
+                }
+
+
+                    .calendar__day-number {
+                        display: inline-block;
+                        margin: 0;
+                        width: $calendar-day-number-dimensions;
+                        height: $calendar-day-number-dimensions;
+                        color: $calendar-day-number-color;
+                        font-size: $font-size;
+                        line-height: $calendar-day-number-dimensions;
+                        text-align: center;
+                        background: $transparent;
+                        border-radius: 50%;
+
+                        .calendar__day--odd-month & {
+                            color: $calendar-day-number-odd-color;
+                        }
+
+                        .calendar__day--today & {
+                            color: $calendar-day-number-today-color;
+                            background: $calendar-day-number-today-bg-color;
+                        }
+                    }
+
+
+                    .calendar__new-release {
+                        display: inline-block;
+
+                        &:hover {
+                            text-decoration: none;
+                        }
+                    }
+
+                        .calendar__new-release-text {
+                            color: $calendar-new-release-color;
+                            font-size: $font-size - 4px;
+                            font-weight: bold;
+                            opacity: 0;
+                            vertical-align: middle;
+
+                            .calendar__new-release:hover & {
+                                opacity: 1;
+                            }
+                        }
+
+                        .calendar__new-release-icon {
+                            width: $calendar-new-release-icon-size;
+                            height: $calendar-new-release-icon-size;
+                            vertical-align: middle;
+                            fill: $calendar-new-release-color;
+                        }
+
+
+            /**
+             * Releases
+             *
+             * Note: background and color properties are set, inline, on the
+             * element itself.
+             *
+             * 1. class added via ReleaseCalendarViewModel
+             */
+            .calendar__release { /* [1] */
+                display: block;
+                padding: 0 ($spacing-unit / 2);
+            }
+
+                /**
+                 * 1. color calculated in releases_helper.rb and applied inline
+                 *    on `.calendar__release`.
+                 */
+                .calendar__release-text {
+                    @extend %truncate;
+                    display: block;
+                    color: inherit; /* [1] */
+                    font-size: $font-size - 4px;
+                    vertical-align: middle;
+                }
+
+                    .calendar__release-name {}
+
+                    .calendar__release-time {
+                        font-weight: bold;
+                    }

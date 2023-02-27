@@ -1,0 +1,135 @@
+- @page_title = t('workarea.admin.fulfillments.show.page_title', name: @order.name)
+
+.view
+  .view__header
+    .grid.grid--middle.grid--right
+      .grid__cell.grid__cell--50
+        .view__heading
+          = link_to_index_for(@order)
+          %h1= link_to @order.name, url_for(@order)
+      .grid__cell.grid__cell--25
+        = render_aux_navigation_for(@order)
+
+  .view__container
+    = render_cards_for(@order, :fulfillment)
+
+  .view__container.view__container--narrow
+    %h2= t('workarea.admin.fulfillments.show.status')
+    .section
+      %span.state{ class: state_indicator_class(@fulfillment.status) }
+        = @fulfillment.status.to_s.titleize
+      = append_partials('admin.fulfillment_status', fulfillment: @fulfillment)
+
+    %h2= t('workarea.admin.fulfillments.show.packages')
+    .section
+      - if @fulfillment.packages.any?
+        - @fulfillment.packages.each do |package|
+          %h4.heading.heading--5
+            - if package.carrier.present? && package.tracking_number.present?
+              = t('workarea.admin.fulfillments.show.shipped_by_carrier', carrier: package.carrier)
+              = t('workarea.admin.fulfillments.show.with_tracking_number_html', tracking_number_link: link_to(package.tracking_number, package.tracking_link, target: '_blank', rel: 'noopener'))
+            - elsif package.carrier.present?
+              = t('workarea.admin.fulfillments.show.shipped_by_carrier', carrier: package.carrier)
+              = t('workarea.admin.fulfillments.show.with_no_tracking_number')
+            - elsif package.tracking_number.present?
+              = t('workarea.admin.fulfillments.show.shipped')
+              = t('workarea.admin.fulfillments.show.with_tracking_number_html', tracking_number_link: link_to(package.tracking_number, package.tracking_link, target: '_blank', rel: 'noopener'))
+            - else
+              = t('workarea.admin.fulfillments.show.delivered')
+
+            - if package.created_at.present?
+              = t('workarea.admin.fulfillments.show.on_time_created_html', time: local_time(package.created_at, :long))
+
+          %table
+            %thead
+              %tr
+                %th= t('workarea.admin.fulfillments.show.product')
+                %th.align-center= t('workarea.admin.fulfillments.show.quantity')
+            %tbody
+              - package.items.each do |item|
+                %tr
+                  %td
+                    %p= link_to item.product.name, catalog_product_path(item.product, sku: item.sku)
+                    %p= item.sku
+                  %td.align-center= item.quantity
+      - else
+        %p= t('workarea.admin.fulfillments.show.no_items_marked_shipped')
+
+      = append_partials('admin.orders_edit_packages')
+
+
+    - if @fulfillment.tokens.any?
+      %h2= t('workarea.admin.fulfillments.show.tokens')
+      .section
+        %table
+          %thead
+            %tr
+              %th
+              %th= t('workarea.admin.fields.id')
+              %th= t('workarea.admin.fields.sku')
+              %th.align-center= t('workarea.admin.fields.downloads')
+              %th= t('workarea.admin.fields.enabled')
+              %th.align-right= t('workarea.admin.fields.created_at')
+              %th
+          %tbody
+            - @fulfillment.tokens.each do |token|
+              %tr
+                %td
+                  = link_to "#token-tooltip-#{token.id}", data: { tooltip: { width: '600', interactive: true }.to_json } do
+                    = inline_svg_tag('workarea/admin/icons/link.svg', class: 'svg-icon svg-icon--blue', title: t('workarea.admin.fulfillment_tokens.index.copy_title'))
+                  .tooltip-content{ id: "token-tooltip-#{token.id}" }
+                    .property.property--inline= text_field_tag 'url', storefront.download_url(token), class: 'text-box text-box--wide', id: "url-#{token.id}"
+                    = button_tag t('workarea.admin.fulfillment_tokens.index.copy_button'), class: 'button button--small', data: { copy_to_clipboard: "#url-#{token.id}" }
+                %td= token.id
+                %td= link_to token.sku, fulfillment_sku_path(token.sku)
+                %td.align-center= number_with_delimiter(token.downloads)
+                %td
+                  = form_tag fulfillment_sku_token_path(token.sku, token), method: 'patch', class: 'text-button text-button--update' do
+                    = hidden_field_tag 'return_to', fulfillment_path(@fulfillment)
+                    = toggle_button_for 'token[enabled]', token.enabled?, id: token.id, data: { form_submitting_control: '' }
+                %td.align-right= local_time_ago(token.updated_at)
+
+    %h2= t('workarea.admin.fulfillments.show.cancellations')
+    .section
+      - if @fulfillment.cancellations.any?
+        %table
+          %thead
+            %tr
+              %th= t('workarea.admin.fulfillments.show.product')
+              %th.align-center= t('workarea.admin.fulfillments.show.quantity')
+          %tbody
+            - @fulfillment.cancellations.each do |item|
+              %tr
+                %td
+                  %p= link_to item.product.name, catalog_product_path(item.product, sku: item.sku)
+                  %p= item.sku
+                %td.align-center= item.quantity
+      - else
+        %p= t('workarea.admin.fulfillments.show.no_items_marked_cancelled')
+
+      = append_partials('admin.orders_edit_cancellations')
+
+    - if @fulfillment.pending_items.any?
+      %h2= t('workarea.admin.fulfillments.show.pending_items')
+      .section
+        %table
+          %thead
+            %tr
+              %th= t('workarea.admin.fulfillments.show.product')
+              %th.align-center= t('workarea.admin.fulfillments.show.quantity')
+          %tbody
+            - @fulfillment.pending_items.each do |item|
+              %tr
+                %td
+                  %p= link_to item.product.name, catalog_product_path(item.product, sku: item.sku)
+                  %p= item.sku
+                %td.align-center= item.quantity
+
+    = append_partials('admin.orders_edit_fulfillments', order: @order, fulfillment: @fulfillment)
+
+  - if partials_to_append?('admin.fulfillment_show_workflow_bar')
+    .workflow-bar
+      .grid
+        .grid__cell.grid__cell--50
+        .grid__cell.grid__cell--50.align-right
+          = append_partials('admin.fulfillment_show_workflow_bar', order: @order, fulfillment: @fulfillment)

@@ -1,0 +1,18 @@
+= append_partials('storefront.order_confirmation_mailer.top')
+
+= render_schema_org(email_action_schema(order_url(@order), t('workarea.storefront.email.order_confirmation.email_action.name')))
+= render_schema_org(order_email_schema(@order))
+
+- content_for :preheader_text do
+  = @content
+
+%tr
+  %td
+    %h1= t('workarea.storefront.email.order_confirmation.heading', order_id: @order.id)
+    = @content
+
+= render 'summary', order: @order
+
+= render 'workarea/storefront/mailers/recommendations', recommendations: @recommendations
+
+= append_partials('storefront.order_confirmation_mailer.bottom')

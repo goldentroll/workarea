@@ -1,0 +1,175 @@
+/*------------------------------------*\
+    #LAYOUT
+\*------------------------------------*/
+
+$email-container-font-color: $dark-gray !default;
+$email-container-main-bg-color: $white !default;
+$email-container-main-shadow-color: $light-gray !default;
+$email-container-main-accent-color: $blue !default;
+
+.email-container {
+    margin: 0 auto;
+    text-align: center;
+    font-family: $font-family;
+    color: $email-container-font-color;
+}
+
+.email-container--main {
+    box-shadow: 0 0 10px $email-container-main-shadow-color;
+    border-bottom: 8px solid $email-container-main-accent-color;
+
+    & > tr > td {
+        background: $email-container-main-bg-color;
+        text-align: left;
+        vertical-align: top;
+        padding: $spacing-unit * 3;
+    }
+}
+
+.email-header {
+    padding: ($spacing-unit * 4) 0;
+}
+
+.email-footer {
+    padding: ($spacing-unit * 4) $spacing-unit;
+    font-family: $font-family;
+}
+
+.section {
+    padding: ($spacing-unit * 2) 0;
+}
+
+
+/*------------------------------------*\
+    #PREHEADER-TEXT
+\*------------------------------------*/
+.preheader-text {
+    display: none;
+    font-size: 1px;
+    line-height: 1px;
+    max-height: 0px;
+    max-width: 0px;
+    opacity: 0;
+    overflow: hidden;
+    mso-hide: all;
+    font-family: sans-serif;
+}
+
+
+/*------------------------------------*\
+    #LOGO
+\*------------------------------------*/
+.logo {
+    display: inline-block;
+    vertical-align: top;
+    text-decoration: none;
+}
+
+    .logo__image {
+        display: block;
+    }
+
+
+/*------------------------------------*\
+    #PRODUCT-GRID
+\*------------------------------------*/
+.product-grid {
+    & > tr > td {
+        vertical-align: top;
+    }
+}
+
+    .product-grid__product {
+        text-align: center;
+    }
+
+        .product-grid__image {
+            padding: 0 0 $spacing-unit;
+        }
+
+        .product-grid__info {
+            padding: 0 0 ($spacing-unit * 2);
+            font-size: $font-size - 2px;
+            font-family: $font-family;
+        }
+
+            .product-grid__link {
+                text-decoration: none;
+            }
+
+            .product-grid__name {
+                display: block;
+            }
+
+            .product-grid__price {
+                font-weight: bold;
+            }
+
+
+/*------------------------------------*\
+    #ITEM-TABLE
+\*------------------------------------*/
+$item-table-th-bg-color:  $light-gray !default;
+$item-table-border-color: $light-gray !default;
+
+.item-table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-bottom: $spacing-unit * 2;
+
+    th, td {
+        padding: $spacing-unit;
+        border: 1px solid $item-table-border-color;
+        font-family: $font-family;
+        vertical-align: top;
+    }
+
+    th {
+        background: $item-table-th-bg-color;
+    }
+}
+
+/*------------------------------------*\
+    #BOX
+\*------------------------------------*/
+$box-border-color: $blue !default;
+
+.box {
+    border: 1px solid $box-border-color;
+    border-left-width: 8px;
+    padding: $spacing-unit * 2;
+    margin: ($spacing-unit * 4) 0;
+}
+
+/*------------------------------------*\
+    #COMMENT
+\*------------------------------------*/
+
+.comment {
+    @extend .box;
+    margin: $spacing-unit * 4;
+}
+
+    .comment__author-info {
+        display: block;
+        font-size: $font-size - 2;
+        font-style: italic;
+        margin-top: $spacing-unit * 2;
+    }
+
+
+/*------------------------------------*\
+    #BUTTON
+\*------------------------------------*/
+$button-color: $white !default;
+$button-bg-color: $blue !default;
+
+.button {
+    display: inline-block;
+    padding: $spacing-unit ($spacing-unit * 4);
+    background: $button-bg-color;
+    color: $button-color;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 11px;
+}

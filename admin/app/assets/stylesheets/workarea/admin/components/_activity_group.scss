@@ -1,0 +1,11 @@
+/*------------------------------------*\
+    #ACTIVITY-GROUP
+\*------------------------------------*/
+
+.activity-group {
+    & + & {
+        margin-top: $spacing-unit * 4;
+    }
+}
+
+    .activity-group__activities {}
